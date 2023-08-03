@@ -13,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useAuthContext } from "../contexts/AuthContext";
+import { Navigate } from "react-router-dom";
 
 function Copyright(props) {
 	return (
@@ -56,6 +57,10 @@ export default function AuthPage() {
 			});
 		}
 	};
+
+	if (user) {
+		return <Navigate to="/" />;
+	}
 
 	return (
 		<ThemeProvider theme={defaultTheme}>

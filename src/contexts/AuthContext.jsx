@@ -31,13 +31,32 @@ const AuthContext = ({ children }) => {
 				password,
 			});
 
+			console.log(tokens);
+
 			localStorage.setItem("tokens", JSON.stringify(tokens));
 
 			const { data } = await $axios.get(`${BASE_URL}/account/profile/`);
 
 			setUser(data);
+		} catch (e) {
+			console.log(e);
+		}
+	}
 
-			console.log(data);
+	function logout() {
+		localStorage.removeItem("tokens");
+		setUser(null);
+	}
+
+	async function checkAuth() {
+		try {
+			const tokens = JSON.parse(localStorage.getItem("tokens"));
+			if (tokens) {
+				const { data } = await $axios.get(`${BASE_URL}/account/profile/`);
+				setUser(data);
+			} else {
+				setUser(null);
+			}
 		} catch (e) {
 			console.log(e);
 		}
@@ -47,6 +66,8 @@ const AuthContext = ({ children }) => {
 		user,
 		register,
 		login,
+		logout,
+		checkAuth,
 	};
 	return <authContext.Provider value={value}>{children}</authContext.Provider>;
 };
