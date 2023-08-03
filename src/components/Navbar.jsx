@@ -15,11 +15,20 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { useAuthContext } from "../contexts/AuthContext";
 import { Link } from "react-router-dom";
 
-const pages = ["Products", "Pricing", "Blog"];
+const pages = [
+	{
+		title: "Home",
+		href: "/",
+	},
+	{
+		title: "Add Product",
+		href: "/add",
+	},
+];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Navbar() {
-	const { user } = useAuthContext();
+	const { user, logout } = useAuthContext();
 
 	const [anchorElNav, setAnchorElNav] = React.useState(null);
 	const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -92,8 +101,13 @@ function Navbar() {
 							}}
 						>
 							{pages.map((page) => (
-								<MenuItem key={page} onClick={handleCloseNavMenu}>
-									<Typography textAlign="center">{page}</Typography>
+								<MenuItem
+									component={Link}
+									to={page.href}
+									key={page.title}
+									onClick={handleCloseNavMenu}
+								>
+									<Typography textAlign="center">{page.title}</Typography>
 								</MenuItem>
 							))}
 						</Menu>
@@ -120,22 +134,25 @@ function Navbar() {
 					<Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
 						{pages.map((page) => (
 							<Button
-								key={page}
+								component={Link}
+								to={page.href}
+								key={page.title}
 								onClick={handleCloseNavMenu}
 								sx={{ my: 2, color: "white", display: "block" }}
 							>
-								{page}
+								{page.title}
 							</Button>
 						))}
 					</Box>
 
 					<Box sx={{ flexGrow: 0 }}>
 						{user ? (
-							<Tooltip title="Open settings">
-								<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-									<Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-								</IconButton>
-							</Tooltip>
+							<Box display="flex" alignItems="center" gap={1}>
+								<Typography>{user.email}</Typography>
+								<Button onClick={logout} sx={{ color: "white" }}>
+									Logout
+								</Button>
+							</Box>
 						) : (
 							<Button component={Link} to="/auth" sx={{ color: "white" }}>
 								Login
