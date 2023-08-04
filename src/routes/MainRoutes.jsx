@@ -4,6 +4,7 @@ import MainLayout from "../layouts/MainLayout";
 import HomePage from "../pages/HomePage";
 import AuthPage from "../pages/AuthPage";
 import AddProductPage from "../pages/AddProductPage";
+import ActivationPage from "../pages/ActivationPage";
 
 const MainRoutes = () => {
 	return (
@@ -13,6 +14,7 @@ const MainRoutes = () => {
 				<Route path="/add" element={<AddProductPage />} />
 			</Route>
 			<Route path="/auth" element={<AuthPage />} />
+			<Route path="/api/account/activate/" element={<ActivationPage />} />
 		</Routes>
 	);
 };

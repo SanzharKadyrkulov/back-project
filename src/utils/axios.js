@@ -30,6 +30,8 @@ $axios.interceptors.response.use(
 				return $axios(config);
 			}
 		}
+
+		return Promise.reject(error);
 	}
 );
 

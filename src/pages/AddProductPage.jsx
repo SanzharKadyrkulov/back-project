@@ -52,8 +52,6 @@ export default function AddProductPage() {
 			return;
 		}
 
-		console.log(formValue);
-
 		const data = new FormData(event.currentTarget);
 
 		createProduct(data);

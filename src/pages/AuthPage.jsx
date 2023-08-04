@@ -3,8 +3,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -14,6 +12,9 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useAuthContext } from "../contexts/AuthContext";
 import { Navigate } from "react-router-dom";
+import { IconButton, InputAdornment } from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 function Copyright(props) {
 	return (
@@ -40,21 +41,20 @@ const defaultTheme = createTheme();
 export default function AuthPage() {
 	const [isLogin, setIsLogin] = React.useState(true);
 	const { register, user, login } = useAuthContext();
+	const [showPassword, setShowPassword] = React.useState(false);
+
+	function changeVisibility() {
+		setShowPassword(!showPassword);
+	}
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
 
 		if (isLogin) {
-			login({
-				email: data.get("email"),
-				password: data.get("password"),
-			});
+			login(data);
 		} else {
-			register({
-				email: data.get("email"),
-				password: data.get("password"),
-			});
+			register(data);
 		}
 	};
 
@@ -86,6 +86,31 @@ export default function AuthPage() {
 						noValidate
 						sx={{ mt: 1 }}
 					>
+						{!isLogin && (
+							<Box
+								display="flex"
+								alignItems="center"
+								justifyContent="space-between"
+								gap={5}
+							>
+								<TextField
+									margin="normal"
+									required
+									fullWidth
+									label="First name"
+									name="first_name"
+									autoFocus
+								/>
+								<TextField
+									margin="normal"
+									required
+									fullWidth
+									label="Last name"
+									name="last_name"
+								/>
+							</Box>
+						)}
+
 						<TextField
 							margin="normal"
 							required
@@ -102,10 +127,30 @@ export default function AuthPage() {
 							fullWidth
 							name="password"
 							label="Password"
-							type="password"
+							type={showPassword ? "text" : "password"}
 							id="password"
 							autoComplete="current-password"
+							InputProps={{
+								endAdornment: (
+									<InputAdornment position="end">
+										<IconButton onClick={changeVisibility}>
+											{showPassword ? <VisibilityOff /> : <Visibility />}
+										</IconButton>
+									</InputAdornment>
+								),
+							}}
 						/>
+
+						{!isLogin && (
+							<TextField
+								margin="normal"
+								required
+								fullWidth
+								name="password_confirmation"
+								label="Confirm password"
+								type="password"
+							/>
+						)}
 
 						<Button
 							type="submit"

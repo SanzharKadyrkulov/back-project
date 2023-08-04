@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { createContext, useContext, useState } from "react";
 import { BASE_URL } from "../utils/consts";
 import $axios from "../utils/axios";
+import { useNavigate } from "react-router-dom";
 
 const authContext = createContext();
 
@@ -11,31 +12,28 @@ export function useAuthContext() {
 
 const AuthContext = ({ children }) => {
 	const [user, setUser] = useState(null);
+	const navigate = useNavigate();
 
-	async function register({ email, password }) {
+	async function register(credentials) {
 		try {
-			await axios.post(`${BASE_URL}/account/register/`, {
-				email,
-				password,
-				password_confirm: password,
-			});
+			await axios.post(`${BASE_URL}/account/register/`, credentials);
 		} catch (e) {
 			console.log(e);
 		}
 	}
 
-	async function login({ email, password }) {
+	async function login(credentials) {
 		try {
-			const { data: tokens } = await axios.post(`${BASE_URL}/account/login/`, {
-				email,
-				password,
-			});
+			const { data: tokens } = await axios.post(
+				`${BASE_URL}/account/login/`,
+				credentials
+			);
 
 			console.log(tokens);
 
 			localStorage.setItem("tokens", JSON.stringify(tokens));
 
-			const { data } = await $axios.get(`${BASE_URL}/account/profile/`);
+			const { data } = await $axios.get(`${BASE_URL}/account/profile`);
 
 			setUser(data);
 		} catch (e) {
@@ -62,12 +60,26 @@ const AuthContext = ({ children }) => {
 		}
 	}
 
+	async function activateUser(code) {
+		try {
+			const res = await $axios.post(`${BASE_URL}/account/activate/`, {
+				code,
+			});
+
+			console.log(res, "code");
+			navigate("/auth");
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
 	const value = {
 		user,
 		register,
 		login,
 		logout,
 		checkAuth,
+		activateUser,
 	};
 	return <authContext.Provider value={value}>{children}</authContext.Provider>;
 };
