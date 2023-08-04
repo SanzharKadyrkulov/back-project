@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Grid } from "@mui/material";
 import { useProductContext } from "../contexts/ProductContext";
+import { Link } from "react-router-dom";
 
 export default function ProductItem({ item }) {
 	const { deleteProduct } = useProductContext();
@@ -16,7 +17,7 @@ export default function ProductItem({ item }) {
 				<CardMedia
 					component="img"
 					alt="green iguana"
-					height="140"
+					height="300"
 					image={item.image}
 				/>
 				<CardContent>
@@ -35,6 +36,14 @@ export default function ProductItem({ item }) {
 						size="small"
 					>
 						Delete
+					</Button>
+					<Button
+						component={Link}
+						to={`/edit/${item.id}`}
+						color="warning"
+						size="small"
+					>
+						Edit
 					</Button>
 					<Button size="small">Learn More</Button>
 				</CardActions>

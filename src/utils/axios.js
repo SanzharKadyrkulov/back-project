@@ -40,7 +40,7 @@ async function refreshAccessToken() {
 		const tokens = JSON.parse(localStorage.getItem("tokens"));
 
 		if (tokens) {
-			const { data } = await axios.post(`${BASE_URL}/account/token/refresh/`, {
+			const { data } = await axios.post(`${BASE_URL}/account/refresh/`, {
 				refresh: tokens.refresh,
 			});
 			localStorage.setItem(
