@@ -13,13 +13,10 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useAuthContext } from "../contexts/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import LiveSearch from "./LiveSearch";
 
 const pages = [
-	{
-		title: "Home",
-		href: "/",
-	},
 	{
 		title: "Add Product",
 		href: "/add",
@@ -29,6 +26,8 @@ const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Navbar() {
 	const { user, logout } = useAuthContext();
+	const navigate = useNavigate();
+	const location = useLocation();
 
 	const [anchorElNav, setAnchorElNav] = React.useState(null);
 	const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -56,8 +55,7 @@ function Navbar() {
 					<Typography
 						variant="h6"
 						noWrap
-						component="a"
-						href="/"
+						onClick={() => location.pathname !== "/" && navigate("/")}
 						sx={{
 							mr: 2,
 							display: { xs: "none", md: "flex" },
@@ -66,6 +64,7 @@ function Navbar() {
 							letterSpacing: ".3rem",
 							color: "inherit",
 							textDecoration: "none",
+							cursor: "pointer",
 						}}
 					>
 						LOGO
@@ -116,8 +115,7 @@ function Navbar() {
 					<Typography
 						variant="h5"
 						noWrap
-						component="a"
-						href=""
+						onClick={() => location.pathname !== "/" && navigate("/")}
 						sx={{
 							mr: 2,
 							display: { xs: "flex", md: "none" },
@@ -127,6 +125,7 @@ function Navbar() {
 							letterSpacing: ".3rem",
 							color: "inherit",
 							textDecoration: "none",
+							cursor: "pointer",
 						}}
 					>
 						LOGO
@@ -144,6 +143,8 @@ function Navbar() {
 							</Button>
 						))}
 					</Box>
+
+					{location.pathname === "/" && <LiveSearch />}
 
 					<Box sx={{ flexGrow: 0 }}>
 						{user ? (

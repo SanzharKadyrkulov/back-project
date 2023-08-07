@@ -1,7 +1,8 @@
 import axios from "axios";
-import React, { createContext, useContext, useReducer } from "react";
-import { BASE_URL } from "../utils/consts";
+import React, { createContext, useContext, useReducer, useState } from "react";
+import { BASE_URL, LIMIT } from "../utils/consts";
 import $axios from "../utils/axios";
+import { useSearchParams } from "react-router-dom";
 
 const productContext = createContext();
 
@@ -13,6 +14,7 @@ const initState = {
 	products: [],
 	oneProduct: null,
 	categories: [],
+	totalPages: 1,
 };
 
 function reducer(state, action) {
@@ -23,6 +25,8 @@ function reducer(state, action) {
 			return { ...state, oneProduct: action.payload };
 		case "categories":
 			return { ...state, categories: action.payload };
+		case "totalPages":
+			return { ...state, totalPages: action.payload };
 		default:
 			return state;
 	}
@@ -30,11 +34,23 @@ function reducer(state, action) {
 
 const ProductContext = ({ children }) => {
 	const [state, dispatch] = useReducer(reducer, initState);
+	const [searchParams, setSearchParams] = useSearchParams();
+	const [page, setPage] = useState(+searchParams.get("page") || 1);
 
 	async function getProducts() {
 		try {
-			const { data } = await $axios.get(`${BASE_URL}/products/`);
+			const { data } = await $axios.get(
+				`${BASE_URL}/products/${window.location.search}`
+			);
 			console.log(data);
+
+			const totalCount = Math.ceil(data.count / LIMIT);
+
+			dispatch({
+				type: "totalPages",
+				payload: totalCount,
+			});
+
 			dispatch({
 				type: "products",
 				payload: data.results,
@@ -98,6 +114,9 @@ const ProductContext = ({ children }) => {
 		products: state.products,
 		oneProduct: state.oneProduct,
 		categories: state.categories,
+		totalPages: state.totalPages,
+		page,
+		setPage,
 		getProducts,
 		createProduct,
 		getCategories,
