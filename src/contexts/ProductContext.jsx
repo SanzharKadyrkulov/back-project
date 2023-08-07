@@ -3,6 +3,7 @@ import React, { createContext, useContext, useReducer, useState } from "react";
 import { BASE_URL, LIMIT } from "../utils/consts";
 import $axios from "../utils/axios";
 import { useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
 
 const productContext = createContext();
 
@@ -110,6 +111,20 @@ const ProductContext = ({ children }) => {
 		}
 	}
 
+	async function addRating(prodId, rating) {
+		try {
+			const { data } = await $axios.post(
+				`${BASE_URL}/products/${prodId}/ratings/`,
+				{
+					rating: rating,
+				}
+			);
+			console.log(data);
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
 	const value = {
 		products: state.products,
 		oneProduct: state.oneProduct,
@@ -123,6 +138,7 @@ const ProductContext = ({ children }) => {
 		deleteProduct,
 		editProduct,
 		getOneProduct,
+		addRating,
 	};
 	return (
 		<productContext.Provider value={value}>{children}</productContext.Provider>

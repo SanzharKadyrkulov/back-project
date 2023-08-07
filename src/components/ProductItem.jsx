@@ -5,7 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Grid } from "@mui/material";
+import { Grid, Rating } from "@mui/material";
 import { useProductContext } from "../contexts/ProductContext";
 import { Link } from "react-router-dom";
 
@@ -28,6 +28,8 @@ export default function ProductItem({ item }) {
 						{item.description}
 					</Typography>
 					<Typography variant="h6">${item.price}</Typography>
+
+					<Rating value={item.rating.rating__avg} readOnly />
 				</CardContent>
 				<CardActions>
 					<Button
@@ -45,7 +47,9 @@ export default function ProductItem({ item }) {
 					>
 						Edit
 					</Button>
-					<Button size="small">Learn More</Button>
+					<Button component={Link} to={`/details/${item.id}`} size="small">
+						Learn More
+					</Button>
 				</CardActions>
 			</Card>
 		</Grid>
